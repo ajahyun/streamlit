@@ -20,22 +20,23 @@ def plot_population_structure(data, region):
         st.warning("해당 지역의 데이터가 없습니다. 정확한 지역명을 입력해주세요.")
         return
     
-    # '총합' 열이 있다면 제거 (여기서 총합이나 합계를 나타내는 열 제거)
+    # 데이터에서 '총합'이나 '총 인구수'를 제외
     population_data = filtered_data.drop(columns=['행정구역']).iloc[0]  # 첫 번째 행 선택
-    population_data = population_data[population_data.index != '총합']  # '총합' 열 제외
+    # '총 인구수', '합계'와 같은 키워드를 포함하는 열 제거
+    population_data = population_data[~population_data.index.str.contains("총", na=False)]
     
     # 그래프 그리기
     plt.figure(figsize=(12, 6))
     plt.bar(population_data.index, population_data.values, color='skyblue')
     plt.xticks(rotation=90)
-    plt.title(f"{region} 지역의 인구 구조 (총합 제외)")
+    plt.title(f"{region} 지역의 인구 구조 (총 인구수 제외)")
     plt.xlabel("연령대")
     plt.ylabel("인구 수")
     st.pyplot(plt)
 
 # Streamlit 애플리케이션 UI 구성
 st.title("지역별 인구 구조 시각화")
-st.write("원하는 지역명을 입력하면 해당 지역의 인구 구조를 확인할 수 있습니다. (총합 제외)")
+st.write("원하는 지역명을 입력하면 해당 지역의 인구 구조를 확인할 수 있습니다. (총 인구수 제외)")
 
 # 데이터 불러오기
 data = load_data()
