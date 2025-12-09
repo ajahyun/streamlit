@@ -4,4 +4,5 @@ python-pptx
 pdf2image
 pillow
 plotly
+statsmodels
 koreanize-matplotlib
